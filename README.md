@@ -30,3 +30,30 @@ docker compose up --build
 - `docker-compose.yml` - Service orchestration
 
 Connect with any SQL Server client using the connection details above.
+
+## Creating a Backup of the Database
+
+Run the following command to back up the DW_BikeZ database inside the container:
+
+```bash
+docker exec -it sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P MyPassword.123 -No -Q "BACKUP DATABASE [DW_BikeZ] TO DISK = N'/var/opt/mssql/data/DW_BikeZ.bak' WITH FORMAT, INIT
+```
+
+Copy the backup file to your host machine:
+
+```bash
+docker cp sqlserver:/var/opt/mssql/data/DW_BikeZ.bak ./DW_BikeZ.bak
+```
+
+### Verifying the Backup
+
+Optionally, verify that the backup is valid:
+
+```bash
+docker exec -it sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P MyPassword.123 -No -Q "RESTORE VERIFYONLY FROM DISK = '/var/opt/mssql/data/DW_BikeZ.bak'"
+```
+A valid backup will return:
+
+```bash
+The backup set on file 1 is valid.
+```
