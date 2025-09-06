@@ -57,3 +57,13 @@ A valid backup will return:
 ```bash
 The backup set on file 1 is valid.
 ```
+
+### Restore
+
+```bash
+# Copy backup file from host to container
+docker cp ./DW_BikeZ.bak sqlserver:/var/opt/mssql/data/DW_BikeZ.bak
+
+# Restore the database
+docker exec -it sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P MyPassword.123 -No -Q "RESTORE DATABASE [DW_BikeZ] FROM DISK = N'/var/opt/mssql/data/DW_BikeZ.bak' WITH REPLACE"
+```
